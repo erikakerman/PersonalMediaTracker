@@ -50,7 +50,27 @@ class Program
         Console.Write("Enter the book title: ");
         string title = Console.ReadLine();
 
-        Book book = new Book(title);
+        Console.Write("Enter the author name: ");
+        string author = Console.ReadLine();
+
+        int rating = 0;
+        while (rating < 1 || rating > 5)
+        {
+            Console.Write("Enter the rating (1-5): ");
+            if (int.TryParse(Console.ReadLine(), out rating))
+            {
+                if (rating < 1 || rating > 5)
+                {
+                    Console.WriteLine("Rating must be between 1 and 5. Please try again.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
+            }
+        }
+
+        Book book = new Book(title, author, rating);
         books.Add(book);
 
         Console.WriteLine("Book added successfully!");
@@ -67,7 +87,7 @@ class Program
             Console.WriteLine("Books in the list:");
             foreach (Book b in books)
             {
-                Console.WriteLine(b.Title);
+                Console.WriteLine($"Title: {b.Title}, Author: {b.Author}, Rating: {b.Rating}");
             }
         }
     }
