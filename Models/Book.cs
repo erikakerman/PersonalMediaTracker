@@ -1,13 +1,9 @@
-﻿class Book
+﻿class Book : Media
 {
-    public string Title { get; set; }
     public string Author { get; set; }
-    public int Rating { get; set; }
 
-    public Book(string title, string author, int rating)
+    public Book(string title, string author, int rating) : base(title, rating)
     {
-        Title = title;
         Author = author;
-        Rating = rating;
     }
 }

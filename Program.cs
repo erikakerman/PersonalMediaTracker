@@ -5,7 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        List<Book> books = new List<Book>();
+        List<Media> mediaList = new List<Media>();
         bool exitProgram = false;
 
         while (!exitProgram)
@@ -16,12 +16,15 @@ class Program
             switch (choice)
             {
                 case "1":
-                    AddBook(books);
+                    AddBook(mediaList);
                     break;
                 case "2":
-                    ViewAllBooks(books);
+                    AddFilm(mediaList);
                     break;
                 case "3":
+                    ViewAllMedia(mediaList);
+                    break;
+                case "4":
                     exitProgram = true;
                     Console.WriteLine("Thank you for using the program. Goodbye!");
                     break;
@@ -38,14 +41,15 @@ class Program
 
     static void DisplayMenu()
     {
-        Console.WriteLine("=== Book Management System ===");
+        Console.WriteLine("=== Media Management System ===");
         Console.WriteLine("1. Add a new book");
-        Console.WriteLine("2. View all books");
-        Console.WriteLine("3. Exit");
-        Console.Write("Enter your choice (1-3): ");
+        Console.WriteLine("2. Add a new film");
+        Console.WriteLine("3. View all media");
+        Console.WriteLine("4. Exit");
+        Console.Write("Enter your choice (1-4): ");
     }
 
-    static void AddBook(List<Book> books)
+    static void AddBook(List<Media> mediaList)
     {
         Console.Write("Enter the book title: ");
         string title = Console.ReadLine();
@@ -53,6 +57,32 @@ class Program
         Console.Write("Enter the author name: ");
         string author = Console.ReadLine();
 
+        int rating = GetRating();
+
+        Book book = new Book(title, author, rating);
+        mediaList.Add(book);
+
+        Console.WriteLine("Book added successfully!");
+    }
+
+    static void AddFilm(List<Media> mediaList)
+    {
+        Console.Write("Enter the film title: ");
+        string title = Console.ReadLine();
+
+        Console.Write("Enter the director name: ");
+        string director = Console.ReadLine();
+
+        int rating = GetRating();
+
+        Film film = new Film(title, director, rating);
+        mediaList.Add(film);
+
+        Console.WriteLine("Film added successfully!");
+    }
+
+    static int GetRating()
+    {
         int rating = 0;
         while (rating < 1 || rating > 5)
         {
@@ -69,25 +99,28 @@ class Program
                 Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
             }
         }
-
-        Book book = new Book(title, author, rating);
-        books.Add(book);
-
-        Console.WriteLine("Book added successfully!");
+        return rating;
     }
 
-    static void ViewAllBooks(List<Book> books)
+    static void ViewAllMedia(List<Media> mediaList)
     {
-        if (books.Count == 0)
+        if (mediaList.Count == 0)
         {
-            Console.WriteLine("There are no books in the list.");
+            Console.WriteLine("There are no items in the list.");
         }
         else
         {
-            Console.WriteLine("Books in the list:");
-            foreach (Book b in books)
+            Console.WriteLine("Media in the list:");
+            foreach (Media item in mediaList)
             {
-                Console.WriteLine($"Title: {b.Title}, Author: {b.Author}, Rating: {b.Rating}");
+                if (item is Book book)
+                {
+                    Console.WriteLine($"Book - Title: {book.Title}, Author: {book.Author}, Rating: {book.Rating}");
+                }
+                else if (item is Film film)
+                {
+                    Console.WriteLine($"Film - Title: {film.Title}, Director: {film.Director}, Rating: {film.Rating}");
+                }
             }
         }
     }
