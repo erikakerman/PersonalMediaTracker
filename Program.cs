@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 class Program
 {
@@ -25,12 +26,17 @@ class Program
                     ViewAllMedia(mediaList);
                     break;
                 case "4":
+                    ExportToCSV(mediaList);
+                    break;
+                case "5":
                     exitProgram = true;
                     Console.WriteLine("Thank you for using the program. Goodbye!");
                     break;
                 default:
                     Console.WriteLine("Invalid choice. Please try again.");
                     break;
+
+               
             }
 
             Console.WriteLine("\nPress any key to continue...");
@@ -45,8 +51,9 @@ class Program
         Console.WriteLine("1. Add a new book");
         Console.WriteLine("2. Add a new film");
         Console.WriteLine("3. View all media");
-        Console.WriteLine("4. Exit");
-        Console.Write("Enter your choice (1-4): ");
+        Console.WriteLine("4. Export to CSV");
+        Console.WriteLine("5. Exit");
+        Console.Write("Enter your choice (1-5): ");
     }
 
     static void AddBook(List<Media> mediaList)
@@ -122,6 +129,45 @@ class Program
                     Console.WriteLine($"Film - Title: {film.Title}, Director: {film.Director}, Rating: {film.Rating}");
                 }
             }
+        }
+    }
+    static void ExportToCSV(List<Media> mediaList)
+    {
+        string filePath = @"D:\media_list.csv";
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                // Write the header
+                writer.WriteLine("Type;Title;Author/Director;Rating");
+
+                // Write each media item
+                foreach (Media item in mediaList)
+                {
+                    string line;
+                    if (item is Book book)
+                    {
+                        line = $"Book;{book.Title};{book.Author};{book.Rating}";
+                    }
+                    else if (item is Film film)
+                    {
+                        line = $"Film;{film.Title};{film.Director};{film.Rating}";
+                    }
+                    else
+                    {
+                        continue; // Skip if it's neither a Book nor a Film
+                    }
+                    writer.WriteLine(line);
+                }
+            }
+
+            Console.WriteLine("Data exported successfully!");
+            Console.WriteLine($"File saved at: {filePath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while writing the file: {ex.Message}");
         }
     }
 }
