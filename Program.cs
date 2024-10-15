@@ -1,16 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Book book = new Book();
+        List<Book> books = new List<Book>();
 
         Console.WriteLine("Enter a book title:");
         string title = Console.ReadLine();
 
-        book.AddTitle(title);
+        Book book = new Book(title);
+        books.Add(book);
 
-        Console.WriteLine("Book title added successfully!");
+        Console.WriteLine("Book added successfully!");
+
+        Console.WriteLine("\nBooks in the list:");
+        foreach (Book b in books)
+        {
+            Console.WriteLine(b.Title);
+        }
     }
 }

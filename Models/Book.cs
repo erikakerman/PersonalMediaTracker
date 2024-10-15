@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-class Book
+﻿class Book
 {
-    private List<string> titles = new List<string>();
+    public string Title { get; set; }
 
-    public void AddTitle(string title)
+    public Book(string title)
     {
-        titles.Add(title);
+        Title = title;
     }
 }
