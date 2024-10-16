@@ -26,9 +26,12 @@ class Program
                     ViewAllMedia(mediaList);
                     break;
                 case "4":
-                    ExportToCSV(mediaList);
+                    SortMediaByRating(mediaList);
                     break;
                 case "5":
+                    ExportToCSV(mediaList);
+                    break;
+                case "6":
                     exitProgram = true;
                     Console.WriteLine("Thank you for using the program. Goodbye!");
                     break;
@@ -51,8 +54,9 @@ class Program
         Console.WriteLine("1. Add a new book");
         Console.WriteLine("2. Add a new film");
         Console.WriteLine("3. View all media");
-        Console.WriteLine("4. Export to CSV");
-        Console.WriteLine("5. Exit");
+        Console.WriteLine("4. Sort by rating");
+        Console.WriteLine("5. Export to .csv");
+        Console.WriteLine("6. Exit");
         Console.Write("Enter your choice (1-5): ");
     }
 
@@ -131,6 +135,20 @@ class Program
             }
         }
     }
+    static void SortMediaByRating(List<Media> mediaList)
+    {
+        if (mediaList.Count == 0)
+        {
+            Console.WriteLine("The list is empty. There's nothing to sort.");
+            return;
+        }
+
+        mediaList.Sort((a, b) => b.Rating.CompareTo(a.Rating));
+
+        Console.WriteLine("Media list sorted by rating (descending order):");
+        ViewAllMedia(mediaList);
+    }
+
     static void ExportToCSV(List<Media> mediaList)
     {
         string filePath = @"D:\media_list.csv";
