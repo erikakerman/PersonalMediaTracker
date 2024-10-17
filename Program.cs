@@ -103,22 +103,26 @@ class Program
     static int GetRating()
     {
         int rating = 0;
-        while (rating < 1 || rating > 5)
+        while (true)
         {
             Console.Write("Enter the rating (1-5): ");
-            if (int.TryParse(Console.ReadLine(), out rating))
+            try
             {
-                if (rating < 1 || rating > 5)
+                rating = int.Parse(Console.ReadLine());
+                if (rating >= 1 && rating <= 5)
+                {
+                    return rating;
+                }
+                else
                 {
                     Console.WriteLine("Rating must be between 1 and 5. Please try again.");
                 }
             }
-            else
+            catch (FormatException)
             {
                 Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
             }
         }
-        return rating;
     }
 
     // Display all media items in the list
