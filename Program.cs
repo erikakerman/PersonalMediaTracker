@@ -6,14 +6,17 @@ class Program
 {
     static void Main(string[] args)
     {
+        // Create a list to store media items
         List<Media> mediaList = new List<Media>();
         bool exitProgram = false;
 
+        // Main program loop
         while (!exitProgram)
         {
             DisplayMenu();
             string choice = Console.ReadLine();
 
+            // Handle user's menu choice
             switch (choice)
             {
                 case "1":
@@ -38,16 +41,16 @@ class Program
                 default:
                     Console.WriteLine("Invalid choice. Please try again.");
                     break;
-
-               
             }
 
+            // Wait for user input before clearing the screen
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
             Console.Clear();
         }
     }
 
+    // Display the main menu options
     static void DisplayMenu()
     {
         Console.WriteLine("=== Media Management System ===");
@@ -60,6 +63,7 @@ class Program
         Console.Write("Enter your choice (1-5): ");
     }
 
+    // Add a new book to the media list
     static void AddBook(List<Media> mediaList)
     {
         Console.Write("Enter the book title: ");
@@ -70,12 +74,14 @@ class Program
 
         int rating = GetRating();
 
+        // Create a new Book object and add it to the list
         Book book = new Book(title, author, rating);
         mediaList.Add(book);
 
         Console.WriteLine("Book added successfully!");
     }
 
+    // Add a new film to the media list
     static void AddFilm(List<Media> mediaList)
     {
         Console.Write("Enter the film title: ");
@@ -86,12 +92,14 @@ class Program
 
         int rating = GetRating();
 
+        // Create a new Film object and add it to the list
         Film film = new Film(title, director, rating);
         mediaList.Add(film);
 
         Console.WriteLine("Film added successfully!");
     }
 
+    // Get a valid rating from the user
     static int GetRating()
     {
         int rating = 0;
@@ -113,6 +121,7 @@ class Program
         return rating;
     }
 
+    // Display all media items in the list
     static void ViewAllMedia(List<Media> mediaList)
     {
         if (mediaList.Count == 0)
@@ -135,6 +144,8 @@ class Program
             }
         }
     }
+
+    // Sort media items by rating in descending order
     static void SortMediaByRating(List<Media> mediaList)
     {
         if (mediaList.Count == 0)
@@ -149,6 +160,7 @@ class Program
         ViewAllMedia(mediaList);
     }
 
+    // Export media list to a CSV file
     static void ExportToCSV(List<Media> mediaList)
     {
         string filePath = @"D:\media_list.csv";
