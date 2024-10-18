@@ -6,17 +6,14 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Create a list to store media items
         List<Media> mediaList = new List<Media>();
         bool exitProgram = false;
 
-        // Main program loop
         while (!exitProgram)
         {
             DisplayMenu();
             string choice = Console.ReadLine();
 
-            // Handle user's menu choice
             switch (choice)
             {
                 case "1":
@@ -35,6 +32,9 @@ class Program
                     ExportToCSV(mediaList);
                     break;
                 case "6":
+                    RemoveMedia(mediaList);
+                    break;
+                case "7":
                     exitProgram = true;
                     Console.WriteLine("Thank you for using the program. Goodbye!");
                     break;
@@ -43,7 +43,6 @@ class Program
                     break;
             }
 
-            // Wait for user input before clearing the screen
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
             Console.Clear();
@@ -59,11 +58,12 @@ class Program
         Console.WriteLine("3. View all media");
         Console.WriteLine("4. Sort by rating");
         Console.WriteLine("5. Export to .csv");
-        Console.WriteLine("6. Exit");
-        Console.Write("Enter your choice (1-5): ");
+        Console.WriteLine("6. Remove media");
+        Console.WriteLine("7. Exit");
+        Console.Write("Enter your choice (1-7): ");
     }
 
-    // Add a new book to the media list
+    // Method to add a new book
     static void AddBook(List<Media> mediaList)
     {
         Console.Write("Enter the book title: ");
@@ -74,14 +74,20 @@ class Program
 
         int rating = GetRating();
 
+        DateTime purchaseDate = GetPurchaseDate();
+
+        Console.Write("Has the book been completed? (y/n): ");
+        bool completed = Console.ReadLine().ToLower() == "y";
+
         // Create a new Book object and add it to the list
-        Book book = new Book(title, author, rating);
+        Book book = new Book(title, author, rating, purchaseDate, completed);
         mediaList.Add(book);
 
         Console.WriteLine("Book added successfully!");
     }
 
     // Add a new film to the media list
+
     static void AddFilm(List<Media> mediaList)
     {
         Console.Write("Enter the film title: ");
@@ -92,11 +98,30 @@ class Program
 
         int rating = GetRating();
 
+        DateTime purchaseDate = GetPurchaseDate();
+
+        Console.Write("Has the film been watched? (y/n): ");
+        bool completed = Console.ReadLine().ToLower() == "y";
+
         // Create a new Film object and add it to the list
-        Film film = new Film(title, director, rating);
+        Film film = new Film(title, director, rating, purchaseDate, completed);
         mediaList.Add(film);
 
         Console.WriteLine("Film added successfully!");
+    }
+
+    // Helper method to get a valid purchase date from the user
+    static DateTime GetPurchaseDate()
+    {
+        while (true)
+        {
+            Console.Write("Enter the purchase date (yyyy-MM-dd): ");
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime purchaseDate))
+            {
+                return purchaseDate;
+            }
+            Console.WriteLine("Invalid date format. Please try again.");
+        }
     }
 
     // Get a valid rating from the user
@@ -137,13 +162,16 @@ class Program
             Console.WriteLine("Media in the list:");
             foreach (Media item in mediaList)
             {
+                string completionStatus = item.Completed ? "Completed" : "Not completed";
                 if (item is Book book)
                 {
-                    Console.WriteLine($"Book - Title: {book.Title}, Author: {book.Author}, Rating: {book.Rating}");
+                    Console.WriteLine($"ID: {book.Id}, Book - Title: {book.Title}, Author: {book.Author}, Rating: {book.Rating}, " +
+                                      $"Purchase Date: {book.PurchaseDate:yyyy-MM-dd}, Status: {completionStatus}");
                 }
                 else if (item is Film film)
                 {
-                    Console.WriteLine($"Film - Title: {film.Title}, Director: {film.Director}, Rating: {film.Rating}");
+                    Console.WriteLine($"ID: {film.Id}, Film - Title: {film.Title}, Director: {film.Director}, Rating: {film.Rating}, " +
+                                      $"Purchase Date: {film.PurchaseDate:yyyy-MM-dd}, Status: {completionStatus}");
                 }
             }
         }
@@ -162,6 +190,36 @@ class Program
 
         Console.WriteLine("Media list sorted by rating (descending order):");
         ViewAllMedia(mediaList);
+    }
+
+    // Remove Media from list
+    static void RemoveMedia(List<Media> mediaList)
+    {
+        if (mediaList.Count == 0)
+        {
+            Console.WriteLine("There are no items in the list to remove.");
+            return;
+        }
+
+        ViewAllMedia(mediaList);
+        Console.Write("Enter the ID of the media you want to remove: ");
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            Media mediaToRemove = mediaList.FirstOrDefault(m => m.Id == id);
+            if (mediaToRemove != null)
+            {
+                mediaList.Remove(mediaToRemove);
+                Console.WriteLine($"Media with ID {id} has been removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"No media found with ID {id}.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid ID. Please enter a valid number.");
+        }
     }
 
     // Export media list to a CSV file
