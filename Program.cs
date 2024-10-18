@@ -156,25 +156,38 @@ class Program
         if (mediaList.Count == 0)
         {
             Console.WriteLine("There are no items in the list.");
+            return;
         }
-        else
+
+        Console.WriteLine("Media in the list:");
+        Console.WriteLine(new string('-', 120)); // Table top border
+        Console.WriteLine("| {0,-5} | {1,-30} | {2,-20} | {3,-7} | {4,-12} | {5,-15} |",
+            "ID", "Title", "Author/Director", "Rating", "Purchase Date", "Status");
+        Console.WriteLine(new string('-', 120)); // Table header separator
+
+        foreach (Media item in mediaList)
         {
-            Console.WriteLine("Media in the list:");
-            foreach (Media item in mediaList)
-            {
-                string completionStatus = item.Completed ? "Completed" : "Not completed";
-                if (item is Book book)
-                {
-                    Console.WriteLine($"ID: {book.Id}, Book - Title: {book.Title}, Author: {book.Author}, Rating: {book.Rating}, " +
-                                      $"Purchase Date: {book.PurchaseDate:yyyy-MM-dd}, Status: {completionStatus}");
-                }
-                else if (item is Film film)
-                {
-                    Console.WriteLine($"ID: {film.Id}, Film - Title: {film.Title}, Director: {film.Director}, Rating: {film.Rating}, " +
-                                      $"Purchase Date: {film.PurchaseDate:yyyy-MM-dd}, Status: {completionStatus}");
-                }
-            }
+            string authorOrDirector = item is Book book ? book.Author : ((Film)item).Director;
+            string completionStatus = item.Completed ? "Completed" : "Not completed";
+
+            // Print the row without the status
+            Console.Write("| {0,-5} | {1,-30} | {2,-20} | {3,-7} | {4,-12:yyyy-MM-dd} | ",
+                item.Id,
+                item.Title.Length <= 30 ? item.Title : item.Title.Substring(0, 27) + "...",
+                authorOrDirector.Length <= 20 ? authorOrDirector : authorOrDirector.Substring(0, 17) + "...",
+                item.Rating,
+                item.PurchaseDate);
+
+            // Set color for completion status and print it
+            Console.ForegroundColor = item.Completed ? ConsoleColor.Green : ConsoleColor.Red;
+            Console.Write("{0,-15}", completionStatus);
+            Console.ResetColor();
+
+            // End the line
+            Console.WriteLine(" |");
         }
+
+        Console.WriteLine(new string('-', 120)); // Table bottom border
     }
 
     // Sort media items by rating in descending order
